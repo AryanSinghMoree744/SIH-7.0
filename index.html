@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Attendance Auto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+  <h1>Face Attendance System</h1>
+
+  <div class="camera-container">
+    <video id="video" width="640" height="480" autoplay muted></video>
+    <canvas id="overlay" width="640" height="480"></canvas>
+  </div>
+
+  <p id="status">Loading models...</p>
+
+  <div class="charts">
+    <h2>Attendance Summary</h2>
+    <canvas id="attendancePieChart" width="400" height="400"></canvas>
+  </div>
+
+  <a href="{{ url_for('details') }}">View attendance</a>
+
+  <script>
+    // Initialize empty pie chart
+    const ctx = document.getElementById('attendancePieChart').getContext('2d');
+    window.attendancePieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Present', 'Absent'],
+        datasets: [{
+          label: 'Attendance',
+          data: [0, 0],
+          backgroundColor: ['#4CAF50', '#f44336']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

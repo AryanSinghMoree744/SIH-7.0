@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <h2>Student Portal</h2>
+    <div class="nav-links">
+      <a href="{{ url_for('student_dashboard', student_id='S101') }}">Home</a>
+      <a href="{{ url_for('student_dashboard', student_id='S101') }}">Dashboard</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Welcome, Student</h1>
+    <div class="card">
+      <h2>Face Recognition Attendance</h2>
+      <a href="{{ url_for('index') }}">Scan face</a>
+    </div>
+
+    <div class="card">
+      <h2>Monthly Attendance</h2>
+      <canvas id="monthlyChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Yearly Attendance Trend</h2>
+      <canvas id="yearlyChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    fetch('{{ url_for("attendance_summary", student_id="S101") }}')
+      .then(res => res.json())
+      .then(data => {
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(monthlyCtx, {
+          type: 'bar',
+          data: {
+            labels: data.labels,
+            datasets: [{ label: 'Attendance %', data: data.values, backgroundColor: 'rgba(54, 162, 235, 0.7)' }]
+          }
+        });
+
+        const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
+        new Chart(yearlyCtx, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{ label: 'Yearly Avg Attendance %', data: data.values, borderColor: 'rgba(255, 99, 132, 1)', fill: false, tension: 0.3 }]
+          }
+        });
+      });
+  </script>
+</body>
+</html>
